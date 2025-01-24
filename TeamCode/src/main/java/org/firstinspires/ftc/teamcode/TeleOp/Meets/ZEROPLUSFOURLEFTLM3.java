@@ -1,15 +1,26 @@
 package org.firstinspires.ftc.teamcode.TeleOp.Meets;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
 
+// RR imports
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+
+
+// Non-RR Imports
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -17,6 +28,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
 @Autonomous(name = "0+4 LEFT", group = "Autonomous")
@@ -316,7 +329,7 @@ public class ZEROPLUSFOURLEFTLM3 extends LinearOpMode {
 
 
         Pose2d initPose = new Pose2d(0, 0, 0);
-        MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
+        PinpointDrive drive = new PinpointDrive(hardwareMap, initPose);
         Slides slides = new Slides(hardwareMap);
         ExtFront extFront = new ExtFront(hardwareMap);
         ExtBack extBack = new ExtBack(hardwareMap);
@@ -418,7 +431,7 @@ public class ZEROPLUSFOURLEFTLM3 extends LinearOpMode {
                         .stopAndAdd(extBack.slideClawOpen())
                         .waitSeconds(.125)
                         .stopAndAdd(extBack.slidePivotBase())
-                         .strafeToLinearHeading(new Vector2d(0,50), Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(0,50), Math.toRadians(90))
                         .stopAndAdd(slides.slidesDown())
                         .strafeToLinearHeading(new Vector2d(18,50), Math.toRadians(90))
                         .build()

@@ -24,7 +24,7 @@ public final class SplineTest extends LinearOpMode {
                             .splineTo(new Vector2d(30, 30), Math.PI / 2)
                             .splineTo(new Vector2d(0, 60), Math.PI)
                             .build());
-        } else if (TuningOpModes.DRIVE_CLASS.equals(SparkFunOTOSDrive.class)) {
+        } else if (TuningOpModes.DRIVE_CLASS.equals(PinpointDrive.class)) {
             SparkFunOTOSDrive drive = new SparkFunOTOSDrive(hardwareMap, beginPose);
 
             waitForStart();
