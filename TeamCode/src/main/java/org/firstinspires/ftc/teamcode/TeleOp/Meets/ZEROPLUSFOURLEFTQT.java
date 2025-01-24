@@ -1,24 +1,14 @@
 package org.firstinspires.ftc.teamcode.TeleOp.Meets;
 
-import android.os.Build;
-
 import androidx.annotation.NonNull;
 
-// RR imports
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-
-
-// Non-RR Imports
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -28,13 +18,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
 @Disabled
 @Autonomous(name = "0+4 LEFT", group = "Autonomous")
-public class ZEROPLUSFOURLEFTLM3 extends LinearOpMode {
+public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
 
     public static class Slides {
         private final DcMotorEx slidesL;
