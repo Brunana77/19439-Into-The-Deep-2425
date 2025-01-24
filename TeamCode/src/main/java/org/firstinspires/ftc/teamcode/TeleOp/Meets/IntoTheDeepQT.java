@@ -19,6 +19,7 @@ public class IntoTheDeepQT extends OpMode {
     // State variable for cycling wrist positions
     int wristPosition = 0; // 0 = Init, 1 = Middle, 2 = Rotated, 3 = LeftMiddle
     boolean rightStickPressed = false; // Debounce mechanism
+    boolean leftStickPressed = false; // Debounce mechanism
 
     @Override
     public void init() {
@@ -109,6 +110,7 @@ public class IntoTheDeepQT extends OpMode {
 
         // Lower to grab position
         if (gamepad1.right_bumper) {
+            wristPosition = 0;
             frontExtension.frontPivotGrab();
             frontExtension.frontClawOpen();
         }
@@ -147,11 +149,27 @@ public class IntoTheDeepQT extends OpMode {
         }
 
         // Reset wrist to Init position with left stick press
-        if (gamepad1.left_stick_button) {
-            wristPosition = 0; // Reset state to Init
-            frontExtension.wristInit();
-        }
+        if (gamepad1.left_stick_button && !leftStickPressed) {
+            wristPosition = (wristPosition + 1) % 4; // Cycle between 0, 1, 2, 3
+            leftStickPressed = true;
 
+            switch (wristPosition) {
+                case 0:
+                    frontExtension.wristInit();
+                    break;
+                case 1:
+                    frontExtension.wristleftMiddle();
+                    break;
+                case 2:
+                    frontExtension.wristRotate();
+                    break;
+                case 3:
+                    frontExtension.wristMiddle();
+                    break;
+            }
+        } else if (!gamepad1.right_stick_button) {
+            leftStickPressed = false; // Reset debounce flag when button is released
+        }
         // Slide positions
         if (gamepad1.dpad_up) {
             frontExtension.transferExtend();
