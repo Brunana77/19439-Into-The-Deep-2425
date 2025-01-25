@@ -113,4 +113,8 @@ public class BackLift {
     public void specimenClose() {
         setSpecimenClaw(0.0);
     }
+
+    public void climbTop(){setSlides(1800);}
+
+    public void climbBottom(){setSlides(1200);}
 }
