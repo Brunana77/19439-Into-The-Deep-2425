@@ -89,8 +89,8 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
                 if (posL > 15 & posR > 15) {
                     return true;
                 } else {
-                    slidesL.setPower(-.1);
-                    slidesR.setPower(-.1);
+                    slidesL.setPower(-.3);
+                    slidesR.setPower(-.3);
                     return false;
                 }
             }
@@ -128,8 +128,8 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
         public class TransferIn implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                leftTransfer.setPosition(.7);
-                rightTransfer.setPosition(.7);
+                leftTransfer.setPosition(.69);
+                rightTransfer.setPosition(.69);
                 return false;
             }
         }
@@ -227,7 +227,7 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
         public class BackPivotBase implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                backPivot.setPosition(0.325);
+                backPivot.setPosition(0.3175);
                 return false;
             }
         }
@@ -377,7 +377,7 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
                         .stopAndAdd(extBack.slidePivotBase())
                         .waitSeconds(.125)
                         .stopAndAdd(slides.slidesDown())
-                        .strafeToLinearHeading(new Vector2d(-29,15), Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(-28,15), Math.toRadians(90))
                         .stopAndAdd(extFront.clawClose())
                         .waitSeconds(.25)
                         .stopAndAdd(extFront.backPivotTransfer())
@@ -400,7 +400,7 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
                         .stopAndAdd(extBack.slidePivotBase())
                         .waitSeconds(.125)
                         .stopAndAdd(slides.slidesDown())
-                        .strafeToLinearHeading(new Vector2d(-12,38), Math.toRadians(180))
+                        .strafeToLinearHeading(new Vector2d(-12  ,38), Math.toRadians(180))
                         .stopAndAdd(extFront.transferExtend())
                         .waitSeconds(.75)
                         .stopAndAdd(extFront.clawClose())

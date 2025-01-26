@@ -110,7 +110,7 @@ public class IntoTheDeepQT extends OpMode {
             }
 
             runtime.reset();
-            while (runtime.seconds() <= 0.75) {
+            while (runtime.seconds() <= 1) {
                 frontExtension.frontPivotTransfer();
                 frontExtension.backPivotTransfer();
                 frontExtension.wristInit();
@@ -130,6 +130,7 @@ public class IntoTheDeepQT extends OpMode {
 
         // Lower to grab position
         if (gamepad1.right_bumper) {
+            wristPosition= 0;
             frontExtension.frontPivotGrab();
             frontExtension.frontClawOpen();
         }
@@ -145,34 +146,52 @@ public class IntoTheDeepQT extends OpMode {
             frontExtension.backPivotBase();
         }
 
-        // Cycle wrist positions with right stick press
+// Cycle wrist positions with right stick press
         if (gamepad1.right_stick_button && !rightStickPressed) {
             wristPosition = (wristPosition + 1) % 4; // Cycle between 0, 1, 2, 3
             rightStickPressed = true;
 
+            // Update wrist position based on the new value
             switch (wristPosition) {
                 case 0:
                     frontExtension.wristInit();
                     break;
                 case 1:
-                    frontExtension.wristMiddle();
+                    frontExtension.wristleftMiddle();
                     break;
                 case 2:
                     frontExtension.wristRotate();
                     break;
                 case 3:
-                    frontExtension.wristleftMiddle();
+                    frontExtension.wristMiddle();
                     break;
             }
         } else if (!gamepad1.right_stick_button) {
             rightStickPressed = false; // Reset debounce flag when button is released
         }
 
+// Cycle wrist positions backward with left stick press
+        if (gamepad1.left_stick_button && !leftStickPressed) {
+            wristPosition = (wristPosition - 1 + 4) % 4; // Cycle between 0, 1, 2, 3 (handle negative values)
+            leftStickPressed = true;
 
-        // Reset wrist to Init position with left stick press
-        if (gamepad1.left_stick_button) {
-            wristPosition = 0; // Reset state to Init
-            frontExtension.wristInit();
+            // Update wrist position based on the new value
+            switch (wristPosition) {
+                case 0:
+                    frontExtension.wristInit();
+                    break;
+                case 1:
+                    frontExtension.wristleftMiddle();
+                    break;
+                case 2:
+                    frontExtension.wristRotate();
+                    break;
+                case 3:
+                    frontExtension.wristMiddle();
+                    break;
+            }
+        } else if (!gamepad1.left_stick_button) {
+            leftStickPressed = false; // Reset debounce flag when button is released
         }
 
         // Slide positions
@@ -196,14 +215,7 @@ public class IntoTheDeepQT extends OpMode {
 
 
         if (gamepad2.x) {
-            runtime.reset();
-            while   (runtime.seconds() <= 0.25){
-                backLift.slidesBase(); }
-            runtime.reset();
-            while (runtime.seconds() <= 0.25) {
-                backLift.slideClawOpen();
-            }
-            backLift.slidePivotBase();
+            backLift.slidesBase();
         }
 
 
@@ -239,7 +251,6 @@ public class IntoTheDeepQT extends OpMode {
                 backLift.slidePivotBase();
             }
             backLift.specimenOpen();
-            backLift.slidesBase();
         }
 
         if (gamepad2.y) {
