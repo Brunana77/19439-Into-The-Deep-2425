@@ -256,6 +256,7 @@ public class IntoTheDeepQT extends OpMode {
         if (gamepad2.y) {
 
                backLift.climbTop();
+               backLift.slidePivotBase();
                frontExtension.transferIn();
                frontExtension.frontPivotGrab();
                frontExtension.wristInit();

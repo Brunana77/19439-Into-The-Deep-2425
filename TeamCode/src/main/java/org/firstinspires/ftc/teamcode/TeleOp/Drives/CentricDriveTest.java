@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.TeleOp.Drives;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
 
-@TeleOp
+@Disabled
 public class CentricDriveTest extends OpMode {
 
     Drivetrain drivetrain = new Drivetrain();
