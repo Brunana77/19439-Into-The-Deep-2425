@@ -54,9 +54,6 @@ public class BackLift {
         setSlides(800);
     }
 
-    public void slidesSpecimenGrab() {
-        setSlides(0);
-    }
 
     public void slidesSpecimenHang() {
         setSlides(950);

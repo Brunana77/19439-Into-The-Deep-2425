@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
 @Autonomous(name = "0+4 LEFT", group = "Autonomous")
-public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
+public class ONEPLUSTHREELEFTQT extends LinearOpMode {
 
     public static class Slides {
         private final DcMotorEx slidesL;
@@ -37,6 +37,35 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
             slidesR.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
+        public class spectop implements Action {
+            private boolean slidesInit = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!slidesInit) {
+                    slidesL.setPower(1);
+                    slidesR.setPower(1);
+                    slidesInit = true;
+                }
+
+                double posL = slidesL.getCurrentPosition();
+                packet.put("slideLPos", posL);
+
+                double posR = slidesR.getCurrentPosition();
+                packet.put("slideRPos", posR);
+
+                if (posL < 2250 & posR < 2250) {
+                    return true;
+                } else {
+                    slidesL.setPower(0.05);
+                    slidesR.setPower(0.05);
+                    return false;
+                }
+            }
+        }
+        public Action spectop() {
+            return new spectop();
+        }
 
         public class SlidesUp implements Action {
             private boolean slidesInit = false;
@@ -69,6 +98,8 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
             return new SlidesUp();
         }
 
+
+
         public class SlidesDown implements Action {
             private boolean init = false;
 
@@ -99,7 +130,40 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
         public Action slidesDown() {
             return new SlidesDown();
         }
+
+        public class speclow implements Action {
+            private boolean init = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!init) {
+                    slidesL.setPower(-1);
+                    slidesR.setPower(-1);
+                    init = true;
+                }
+
+                double posL = slidesL.getCurrentPosition();
+                packet.put("slideLPos", posL);
+
+                double posR = slidesR.getCurrentPosition();
+                packet.put("slideRPos", posR);
+
+                if (posL > 15 & posR > 15) {
+                    return true;
+                } else {
+                    slidesL.setPower(-.3);
+                    slidesR.setPower(-.3);
+                    return false;
+                }
+            }
+        }
+
+        public Action speclow() {
+            return new speclow();
+        }
+
     }
+
 
     public static class ExtFront {
         private final Servo backPivot;
@@ -256,9 +320,12 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
         private final Servo slidePivot;
         private final Servo slideClaw;
 
+        private final Servo specimenClaw;
+
         public ExtBack(HardwareMap hwMap) {
             slidePivot = hwMap.get(Servo.class, "slide pivot");
             slideClaw = hwMap.get(Servo.class, "slide claw");
+            specimenClaw = hwMap.get(Servo.class, "specimen claw");
 
             slidePivot.setDirection(Servo.Direction.REVERSE);
         }
@@ -307,6 +374,30 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
             }
         }
 
+        public Action specopen() {
+            return new SpecOpen();
+        }
+
+        public class SpecOpen implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                specimenClaw.setPosition(0.3);
+                return false;
+            }
+        }
+
+        public Action specclose() {
+            return new SpecClose();
+        }
+
+        public class SpecClose implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                specimenClaw.setPosition(0);
+                return false;
+            }
+        }
+
         public Action slideClawClose() {
             return new SlideClawClose();
         }
@@ -333,7 +424,8 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
                         extFront.wristInit(),
                         extBack.slidePivotBase(),
                         extBack.slideClawClose(),
-                        slides.slidesDown()
+                        slides.slidesDown(),
+                        extBack.specclose()
                 )
         );
 
@@ -342,18 +434,18 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
 
 
         Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(0,0,0))
-                        .stopAndAdd(slides.slidesUp())
-                        .stopAndAdd(extBack.slidePivotDrop())
-                        .stopAndAdd(extFront.transferExtend())
-                        .strafeToLinearHeading(new Vector2d(-23,9), Math.toRadians(45))
-                        .stopAndAdd(extBack.slideClawOpen())
-                        .waitSeconds(.125)
-                        .stopAndAdd(extBack.slidePivotBase())
-                        .waitSeconds(.125)
+                drive.actionBuilder(new Pose2d(0,0,270))
+                        .stopAndAdd(slides.spectop())
+                        //fill in with new start position
+                        .strafeToLinearHeading(new Vector2d(0,0), Math.toRadians(270))
                         //first cycle
+                        .stopAndAdd(slides.speclow())
+                        .waitSeconds(.5)
+                        .stopAndAdd(extBack.specopen())
                         .stopAndAdd(slides.slidesDown())
                         .strafeToLinearHeading(new Vector2d(-17,15), Math.toRadians(90))
+                        .stopAndAdd(extFront.transferExtend())
+                        .waitSeconds(1)//fill in blank
                         .stopAndAdd(extFront.clawClose())
                         .waitSeconds(.25)
                         .stopAndAdd(extFront.backPivotTransfer())
