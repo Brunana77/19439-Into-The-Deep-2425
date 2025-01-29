@@ -442,8 +442,8 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
                         .stopAndAdd(slides.speclow())
                         .waitSeconds(.5)
                         .stopAndAdd(extBack.specopen())
-                        .stopAndAdd(slides.slidesDown())
                         .strafeToLinearHeading(new Vector2d(-17,15), Math.toRadians(90))
+                        .stopAndAdd(slides.slidesDown())
                         .stopAndAdd(extFront.transferExtend())
                         .waitSeconds(1)//fill in blank
                         .stopAndAdd(extFront.clawClose())
