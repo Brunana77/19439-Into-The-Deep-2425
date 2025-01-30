@@ -21,7 +21,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
-@Autonomous(name = "0+4 LEFT", group = "Autonomous")
+@Autonomous(name = "1+3 LEFTQT", group = "Autonomous")
 public class ONEPLUSTHREELEFTQT extends LinearOpMode {
 
     public static class Slides {
@@ -54,7 +54,7 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
                 double posR = slidesR.getCurrentPosition();
                 packet.put("slideRPos", posR);
 
-                if (posL < 2250 & posR < 2250) {
+                if (posL < 1350 & posR < 1350) {
                     return true;
                 } else {
                     slidesL.setPower(0.05);
@@ -148,11 +148,11 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
                 double posR = slidesR.getCurrentPosition();
                 packet.put("slideRPos", posR);
 
-                if (posL > 15 & posR > 15) {
+                if (posL > 900 & posR > 900) {
                     return true;
                 } else {
-                    slidesL.setPower(-.3);
-                    slidesR.setPower(-.3);
+                    slidesL.setPower(-0);
+                    slidesR.setPower(-0);
                     return false;
                 }
             }
@@ -419,7 +419,7 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
                 new ParallelAction(
                         extFront.clawOpen(),
                         extFront.transferIn(),
-                        extFront.backPivotBase(),
+                        extFront.backPivotTransfer(),
                         extFront.frontPivotGrab(),
                         extFront.wristInit(),
                         extBack.slidePivotBase(),
@@ -434,15 +434,16 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
 
 
         Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(0,0,270))
+                drive.actionBuilder(new Pose2d(10,0,0))
                         .stopAndAdd(slides.spectop())
                         //fill in with new start position
-                        .strafeToLinearHeading(new Vector2d(0,0), Math.toRadians(270))
+                        .strafeToLinearHeading(new Vector2d(30 ,32), Math.toRadians(270))
                         //first cycle
                         .stopAndAdd(slides.speclow())
                         .waitSeconds(.5)
                         .stopAndAdd(extBack.specopen())
-                        .strafeToLinearHeading(new Vector2d(-17,15), Math.toRadians(90))
+                        .stopAndAdd(extFront.backPivotBase())
+                        .strafeToLinearHeading(new Vector2d(-16,15), Math.toRadians(90))
                         .stopAndAdd(slides.slidesDown())
                         .stopAndAdd(extFront.transferExtend())
                         .waitSeconds(1)//fill in blank
@@ -451,7 +452,7 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
                         .stopAndAdd(extFront.backPivotTransfer())
                         .stopAndAdd(extFront.frontPivotTransfer())
                         .stopAndAdd(extFront.transferIn())
-                        .waitSeconds(.75)
+                        .waitSeconds(1)
                         .stopAndAdd(extBack.slideClawClose())
                         .waitSeconds(.1)
                         .stopAndAdd(extFront.clawOpen())
@@ -475,7 +476,7 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
                         .stopAndAdd(extFront.backPivotTransfer())
                         .stopAndAdd(extFront.frontPivotTransfer())
                         .stopAndAdd(extFront.transferIn())
-                        .waitSeconds(.75)
+                        .waitSeconds(1)
                         .stopAndAdd(extBack.slideClawClose())
                         .waitSeconds(.1)
                         .stopAndAdd(extFront.clawOpen())
@@ -513,7 +514,7 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
                         .waitSeconds(.125)
                         .strafeToLinearHeading(new Vector2d(0,55), Math.toRadians(180))
                         .stopAndAdd(slides.slidesDown())
-                        .strafeToLinearHeading(new Vector2d(18,55), Math.toRadians(180))
+                        .strafeToLinearHeading(new Vector2d(15,55), Math.toRadians(180))
                         .build()
         );
 

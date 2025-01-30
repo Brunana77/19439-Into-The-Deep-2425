@@ -21,7 +21,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
-@Autonomous(name = "0+4 LEFT", group = "Autonomous")
+@Autonomous(name = "0+4 LEFTQT", group = "Autonomous")
 public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
 
     public static class Slides {
@@ -328,7 +328,7 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
                 new ParallelAction(
                         extFront.clawOpen(),
                         extFront.transferIn(),
-                        extFront.backPivotBase(),
+                        extFront.backPivotTransfer(),
                         extFront.frontPivotGrab(),
                         extFront.wristInit(),
                         extBack.slidePivotBase(),
@@ -346,6 +346,7 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
                         .stopAndAdd(slides.slidesUp())
                         .stopAndAdd(extBack.slidePivotDrop())
                         .stopAndAdd(extFront.transferExtend())
+                        .stopAndAdd(extFront.backPivotBase())
                         .strafeToLinearHeading(new Vector2d(-23,9), Math.toRadians(45))
                         .stopAndAdd(extBack.slideClawOpen())
                         .waitSeconds(.125)
@@ -359,7 +360,7 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
                         .stopAndAdd(extFront.backPivotTransfer())
                         .stopAndAdd(extFront.frontPivotTransfer())
                         .stopAndAdd(extFront.transferIn())
-                        .waitSeconds(.75)
+                        .waitSeconds(1)
                         .stopAndAdd(extBack.slideClawClose())
                         .waitSeconds(.1)
                         .stopAndAdd(extFront.clawOpen())
@@ -383,7 +384,7 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
                         .stopAndAdd(extFront.backPivotTransfer())
                         .stopAndAdd(extFront.frontPivotTransfer())
                         .stopAndAdd(extFront.transferIn())
-                        .waitSeconds(.75)
+                        .waitSeconds(1)
                         .stopAndAdd(extBack.slideClawClose())
                         .waitSeconds(.1)
                         .stopAndAdd(extFront.clawOpen())
@@ -421,7 +422,7 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
                         .waitSeconds(.125)
                         .strafeToLinearHeading(new Vector2d(0,55), Math.toRadians(180))
                         .stopAndAdd(slides.slidesDown())
-                        .strafeToLinearHeading(new Vector2d(18,55), Math.toRadians(180))
+                        .strafeToLinearHeading(new Vector2d(15,55), Math.toRadians(180))
                         .build()
         );
 
