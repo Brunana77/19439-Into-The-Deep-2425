@@ -166,7 +166,7 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
         public class ClawClose implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                frontClaw.setPosition(0);
+                frontClaw.setPosition(.26);
                 return false;
             }
         }
@@ -378,7 +378,7 @@ public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
                         .stopAndAdd(extBack.slidePivotBase())
                         .waitSeconds(.125)
                         .stopAndAdd(slides.slidesDown())
-                        .strafeToLinearHeading(new Vector2d(-28,15), Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(-28,14), Math.toRadians(90))
                         .stopAndAdd(extFront.clawClose())
                         .waitSeconds(.25)
                         .stopAndAdd(extFront.backPivotTransfer())

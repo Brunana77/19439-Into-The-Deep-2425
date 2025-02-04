@@ -148,7 +148,7 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
                 double posR = slidesR.getCurrentPosition();
                 packet.put("slideRPos", posR);
 
-                if (posL > 900 & posR > 900) {
+                if (posL > 800 & posR > 800) {
                     return true;
                 } else {
                     slidesL.setPower(-0);
@@ -230,7 +230,7 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
         public class ClawClose implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                frontClaw.setPosition(0);
+                frontClaw.setPosition(0.26);
                 return false;
             }
         }
@@ -470,7 +470,7 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
                         .stopAndAdd(extBack.slidePivotBase())
                         .waitSeconds(.125)
                         .stopAndAdd(slides.slidesDown())
-                        .strafeToLinearHeading(new Vector2d(-28,15), Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(-29,15), Math.toRadians(90))
                         .stopAndAdd(extFront.clawClose())
                         .waitSeconds(.25)
                         .stopAndAdd(extFront.backPivotTransfer())

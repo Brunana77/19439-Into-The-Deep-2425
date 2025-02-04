@@ -68,7 +68,7 @@ public class FrontExt {
     }
 
     public void frontClawGrab() {
-        setFrontClaw(0);
+        setFrontClaw(.26);
     }
 
     /**
