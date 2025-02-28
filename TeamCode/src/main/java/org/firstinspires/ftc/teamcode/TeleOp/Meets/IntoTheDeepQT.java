@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TeleOp.Meets;
+/*package org.firstinspires.ftc.teamcode.TeleOp.Meets;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -64,7 +64,7 @@ public class IntoTheDeepQT extends OpMode {
          * P2:
          * D-Pad Up/Right/Left - Basket/Specimen Pivot
          * B - Reset BackLift
-         */
+         *
 
         // Hard reset all positions
         if (gamepad1.x) {
@@ -273,3 +273,4 @@ public class IntoTheDeepQT extends OpMode {
         drivetrain.stopMotors();
     }
 }
+*/

@@ -123,7 +123,7 @@ public class FrontExt {
     }
 
     public void backPivotTransfer() {
-        setBackPivot(0.0);
+        setBackPivot(0.05);
     }
 
 public void backPivotcimb() {setBackPivot(.5);}

@@ -7,26 +7,26 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class BackLift {
     private DcMotor slidesR;
     private DcMotor slidesL;
-    private Servo slidePivot;
     private Servo slideClaw;
-    private Servo specimenClaw;
+    private Servo leftBackTransfer;
+    private Servo rightBackTransfer;
+
 
     public void init(HardwareMap hwMap) {
         slidesR = hwMap.get(DcMotor.class, "slidesR");
         slidesL = hwMap.get(DcMotor.class, "slidesL");
-        slidePivot = hwMap.get(Servo.class, "slide pivot");
         slideClaw = hwMap.get(Servo.class, "slide claw");
-        specimenClaw = hwMap.get(Servo.class, "specimen claw");
+        leftBackTransfer = hwMap.get(Servo.class, "BTleft");
+        rightBackTransfer = hwMap.get(Servo.class, "BTright");
 
         //Slides
         slidesR.setDirection(DcMotor.Direction.REVERSE);
         slidesL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slidesR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slidePivot.setDirection(Servo.Direction.REVERSE);
+        rightBackTransfer.setDirection(Servo.Direction.REVERSE);
 
         slideClawOpen();
-        slidePivotBase();
-        specimenOpen();
+        transfergrab();
     }
 
     /**
@@ -68,17 +68,6 @@ public class BackLift {
     /**
      * The following 2 (+1) loops all have to do with SlidePivot positions.
      */
-    public void setSlidePivot(double pos) {
-        slidePivot.setPosition(pos);
-    }
-
-    public void slidePivotBase() {
-        setSlidePivot(0);
-    }
-
-    public void slidePivotDrop() {
-        setSlidePivot(0.8);
-    }
 
     /**
      * The following 2 (+1) are slide claw positions.
@@ -96,20 +85,23 @@ public class BackLift {
         setSlideClaw(0.41);
     }
 
+    public void setTransfer(double L, double R) {
+        leftBackTransfer.setPosition(L);
+        rightBackTransfer.setPosition(R);
+    }
+
+    public void transfergrab() {
+        setTransfer(1, 1);
+    }
+public  void transferdrop(){
+        setTransfer(.3,.3);
+    }
+
     /**
+     *
+
      * The following 2 (+1) are specimen claw positions.
      */
-    public void setSpecimenClaw(double pos) {
-        specimenClaw.setPosition(pos);
-    }
-
-    public void specimenOpen() {
-        setSpecimenClaw(0.3);
-    }
-
-    public void specimenClose() {
-        setSpecimenClaw(0.0);
-    }
 
     public void climbTop(){setSlides(1800);}
 

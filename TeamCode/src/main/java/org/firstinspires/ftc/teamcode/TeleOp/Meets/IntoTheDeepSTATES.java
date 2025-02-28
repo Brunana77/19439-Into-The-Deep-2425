@@ -1,17 +1,15 @@
-/*
 package org.firstinspires.ftc.teamcode.TeleOp.Meets;
 
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.mechanisms.BackLift;
 import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.mechanisms.FrontExt;
 
-@Disabled
-public class IntoTheDeepLM3 extends OpMode {
+@TeleOp
+public class IntoTheDeepSTATES extends OpMode {
     Drivetrain drivetrain = new Drivetrain();
     FrontExt frontExtension = new FrontExt();
     BackLift backLift = new BackLift();
@@ -21,7 +19,7 @@ public class IntoTheDeepLM3 extends OpMode {
     // State variable for cycling wrist positions
     int wristPosition = 0; // 0 = Init, 1 = Middle, 2 = Rotated, 3 = LeftMiddle
     boolean rightStickPressed = false; // Debounce mechanism
-
+    boolean leftStickPressed = false; // Debounce mechanism
     @Override
     public void init() {
         drivetrain.init(hardwareMap);
@@ -65,13 +63,13 @@ public class IntoTheDeepLM3 extends OpMode {
          * P2:
          * D-Pad Up/Right/Left - Basket/Specimen Pivot
          * B - Reset BackLift
-         *
+         */
 
         // Hard reset all positions
         if (gamepad1.x) {
             backLift.slideClawOpen();
-            backLift.slidePivotBase();
-            backLift.specimenOpen();
+            backLift.transfergrab();
+
             frontExtension.backPivotBase();
             frontExtension.frontPivotTransfer();
             frontExtension.wristInit();
@@ -111,7 +109,7 @@ public class IntoTheDeepLM3 extends OpMode {
             }
 
             runtime.reset();
-            while (runtime.seconds() <= 0.75) {
+            while (runtime.seconds() <= 1) {
                 frontExtension.frontPivotTransfer();
                 frontExtension.backPivotTransfer();
                 frontExtension.wristInit();
@@ -131,6 +129,7 @@ public class IntoTheDeepLM3 extends OpMode {
 
         // Lower to grab position
         if (gamepad1.right_bumper) {
+            wristPosition= 0;
             frontExtension.frontPivotGrab();
             frontExtension.frontClawOpen();
         }
@@ -146,33 +145,52 @@ public class IntoTheDeepLM3 extends OpMode {
             frontExtension.backPivotBase();
         }
 
-        // Cycle wrist positions with right stick press
+// Cycle wrist positions with right stick press
         if (gamepad1.right_stick_button && !rightStickPressed) {
             wristPosition = (wristPosition + 1) % 4; // Cycle between 0, 1, 2, 3
             rightStickPressed = true;
 
+            // Update wrist position based on the new value
             switch (wristPosition) {
                 case 0:
                     frontExtension.wristInit();
                     break;
                 case 1:
-                    frontExtension.wristMiddle();
+                    frontExtension.wristleftMiddle();
                     break;
                 case 2:
                     frontExtension.wristRotate();
                     break;
                 case 3:
-                    frontExtension.wristleftMiddle();
+                    frontExtension.wristMiddle();
                     break;
             }
         } else if (!gamepad1.right_stick_button) {
             rightStickPressed = false; // Reset debounce flag when button is released
         }
 
-        // Reset wrist to Init position with left stick press
-        if (gamepad1.left_stick_button) {
-            wristPosition = 0; // Reset state to Init
-            frontExtension.wristInit();
+// Cycle wrist positions backward with left stick press
+        if (gamepad1.left_stick_button && !leftStickPressed) {
+            wristPosition = (wristPosition - 1 + 4) % 4; // Cycle between 0, 1, 2, 3 (handle negative values)
+            leftStickPressed = true;
+
+            // Update wrist position based on the new value
+            switch (wristPosition) {
+                case 0:
+                    frontExtension.wristInit();
+                    break;
+                case 1:
+                    frontExtension.wristleftMiddle();
+                    break;
+                case 2:
+                    frontExtension.wristRotate();
+                    break;
+                case 3:
+                    frontExtension.wristMiddle();
+                    break;
+            }
+        } else if (!gamepad1.left_stick_button) {
+            leftStickPressed = false; // Reset debounce flag when button is released
         }
 
         // Slide positions
@@ -193,42 +211,30 @@ public class IntoTheDeepLM3 extends OpMode {
             frontExtension.wristInit();
         }
 
-        if (gamepad2.a) {
-            backLift.slidesSpec();
-            backLift.slidePivotDrop();
-        }
+
 
         if (gamepad2.x) {
-            runtime.reset();
-            while   (runtime.seconds() <= 0.25){
-            backLift.slidesBase(); }
-            runtime.reset();
-            while (runtime.seconds() <= 0.25) {
-                backLift.slideClawOpen();
-            }
-            backLift.slidePivotBase();
+            backLift.slidesBase();
         }
 
 
         // Basket pivots and specimen handling
         if (gamepad2.dpad_up) {
             backLift.slidesTop();
-            backLift.slidePivotDrop();
+           backLift.transferdrop();
         } else if (gamepad2.dpad_down) {
             runtime.reset();
             while (runtime.seconds() <= 0.5) {
                 backLift.slidesSpecimenHang();
             }
-            backLift.specimenOpen();
         } else if (gamepad2.dpad_left) {
             runtime.reset();
             while (runtime.seconds() <= 0.5) {
-                backLift.specimenClose();
             }
             backLift.slidesSpecimenPreHang();
         } else if (gamepad2.dpad_right) {
             backLift.slidesMiddle();
-            backLift.slidePivotDrop();
+            backLift.transferdrop();
         }
 
         // Reset slides and claws
@@ -239,10 +245,22 @@ public class IntoTheDeepLM3 extends OpMode {
             }
             runtime.reset();
             while (runtime.seconds() <= 0.25) {
-                backLift.slidePivotBase();
+                backLift.transfergrab();
             }
-            backLift.specimenOpen();
-            backLift.slidesBase();
+        }
+
+        if (gamepad2.y) {
+
+               backLift.climbTop();
+              backLift.transfergrab();
+               frontExtension.transferIn();
+               frontExtension.frontPivotGrab();
+               frontExtension.wristInit();
+        }
+
+        if (gamepad2.a) {
+            backLift.climbBottom();
+
         }
     }
 
@@ -251,6 +269,3 @@ public class IntoTheDeepLM3 extends OpMode {
         drivetrain.stopMotors();
     }
 }
-
-
- */
