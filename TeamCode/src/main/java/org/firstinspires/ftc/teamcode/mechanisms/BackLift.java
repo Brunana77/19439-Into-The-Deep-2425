@@ -94,7 +94,7 @@ public class BackLift {
         setTransfer(1, 1);
     }
 public  void transferdrop(){
-        setTransfer(.3,.3);
+        setTransfer(.35 ,.35);
     }
 
     /**

@@ -55,6 +55,8 @@ public class FrontExt {
         setTransfer(1.0, 1);
     }
 
+    public void transfersoftwarelimits() {setTransfer(.9,.9);}
+
     /**
      * The following 2 (+1) are claw positions.
      */
