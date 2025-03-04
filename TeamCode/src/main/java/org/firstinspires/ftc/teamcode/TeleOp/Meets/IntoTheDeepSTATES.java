@@ -7,13 +7,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.mechanisms.BackLift;
 import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.mechanisms.FrontExt;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 @TeleOp
 public class IntoTheDeepSTATES extends OpMode {
     Drivetrain drivetrain = new Drivetrain();
     FrontExt frontExtension = new FrontExt();
     BackLift backLift = new BackLift();
-
+    ColorSensor colorSensor;
     ElapsedTime runtime = new ElapsedTime();
 
     // State variable for cycling wrist positions
@@ -25,11 +26,23 @@ public class IntoTheDeepSTATES extends OpMode {
         drivetrain.init(hardwareMap);
         frontExtension.init(hardwareMap);
         backLift.init(hardwareMap);
+        colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+        telemetry.addData("Status", "Initialized");
         runtime.reset();
     }
 
     @Override
     public void loop() {
+
+        int red = colorSensor.red();
+        int green = colorSensor.green();
+        int blue = colorSensor.blue();
+
+        boolean isYellow = (red > 1000 && green > 1000 && blue < 2000);
+        boolean isBlue = (blue > red * 1.3 && blue > green * 1.3);
+        boolean isRed = (red > blue * 1.3 && red > green * 1.1);
+        boolean sampleDetected = isYellow || isBlue || isRed;
+
         // P1 drive code, field centric (up is always up)
         float forward = -gamepad1.left_stick_y;
         float right = gamepad1.left_stick_x;
@@ -65,13 +78,23 @@ public class IntoTheDeepSTATES extends OpMode {
          * B - Reset BackLift
          */
 
+
+        /* code ideas:
+        add color sensor to claw to determine if claw actively has something in grasp- make it auto go back if it confirms to have something
+        make cycles less time based and more state based
+        when a is pressed it brings the calw all the way in instead of full cycles, then when gamepad 2 is used to lift slides it finishes the transfer system
+        add software limits to maximize sizing
+        add reset button for driver 2
+
+         */
+
         // Hard reset all positions
         if (gamepad1.x) {
             backLift.slideClawOpen();
             backLift.transfergrab();
 
-            frontExtension.backPivotBase();
-            frontExtension.frontPivotTransfer();
+            frontExtension.backPivotTransfer();
+            frontExtension.frontPivotGrab();
             frontExtension.wristInit();
             frontExtension.frontClawOpen();
             frontExtension.transferIn();
@@ -89,42 +112,7 @@ public class IntoTheDeepSTATES extends OpMode {
                 frontExtension.wristInit();
                 frontExtension.transferFullIn();
             }
-            runtime.reset();
-            while (runtime.seconds() <= 0.1) {
-                backLift.slideClawClose();
-            }
-            runtime.reset();
-            while (runtime.seconds() <= 0.125) {
-                frontExtension.frontClawOpen();
-                frontExtension.frontPivotBase();
-                frontExtension.backPivotBase();
-            }
-        }
 
-        if (gamepad1.y) {
-            runtime.reset();
-            while (runtime.seconds() <= 0.25) {
-                frontExtension.frontClawGrab();
-                backLift.slideClawOpen();
-            }
-
-            runtime.reset();
-            while (runtime.seconds() <= 1) {
-                frontExtension.frontPivotTransfer();
-                frontExtension.backPivotTransfer();
-                frontExtension.wristInit();
-                frontExtension.transferFullIn();
-            }
-            runtime.reset();
-            while (runtime.seconds() <= 0.1) {
-                backLift.slideClawClose();
-            }
-            runtime.reset();
-            while (runtime.seconds() <= 0.125) {
-                frontExtension.frontClawOpen();
-                frontExtension.frontPivotBase();
-                frontExtension.backPivotBase();
-            }
         }
 
         // Lower to grab position
@@ -132,6 +120,7 @@ public class IntoTheDeepSTATES extends OpMode {
             wristPosition= 0;
             frontExtension.frontPivotGrab();
             frontExtension.frontClawOpen();
+            frontExtension.backPivotBase();
         }
 
         // Grab specimen
@@ -196,17 +185,17 @@ public class IntoTheDeepSTATES extends OpMode {
         // Slide positions
         if (gamepad1.dpad_up) {
             frontExtension.transferExtend();
-            frontExtension.frontPivotBase();
+            frontExtension.frontPivotGrab();
             frontExtension.backPivotBase();
             frontExtension.wristInit();
         } else if (gamepad1.dpad_right) {
             frontExtension.transferMiddle();
-            frontExtension.frontPivotBase();
+            frontExtension.frontPivotGrab();
             frontExtension.backPivotBase();
             frontExtension.wristInit();
         } else if (gamepad1.dpad_down) {
             frontExtension.transferFullIn();
-            frontExtension.frontPivotBase();
+            frontExtension.frontPivotGrab();
             frontExtension.backPivotBase();
             frontExtension.wristInit();
         }
@@ -220,19 +209,24 @@ public class IntoTheDeepSTATES extends OpMode {
 
         // Basket pivots and specimen handling
         if (gamepad2.dpad_up) {
+            runtime.reset();
+            while (runtime.seconds() <= 0.125) {
+                backLift.slideClawClose();
+                frontExtension.frontClawOpen();
+                frontExtension.frontPivotBase();
+            }
             backLift.slidesTop();
            backLift.transferdrop();
-        } else if (gamepad2.dpad_down) {
-            runtime.reset();
-            while (runtime.seconds() <= 0.5) {
-                backLift.slidesSpecimenHang();
-            }
-        } else if (gamepad2.dpad_left) {
-            runtime.reset();
-            while (runtime.seconds() <= 0.5) {
-            }
-            backLift.slidesSpecimenPreHang();
+
+
+
         } else if (gamepad2.dpad_right) {
+            runtime.reset();
+            while (runtime.seconds() <= 0.125) {
+                backLift.slideClawClose();
+                frontExtension.frontClawOpen();
+                frontExtension.frontPivotBase();
+            }
             backLift.slidesMiddle();
             backLift.transferdrop();
         }
@@ -262,7 +256,17 @@ public class IntoTheDeepSTATES extends OpMode {
             backLift.climbBottom();
 
         }
+
+        telemetry.addData("Red", red);
+        telemetry.addData("Green", green);
+        telemetry.addData("Blue", blue);
+        telemetry.addData("Detected Color", isYellow ? "Yellow" : isBlue ? "Blue" : isRed ? "Red" : "None");
+        telemetry.addData("Sample Status", sampleDetected ? "Sample Detected" : "No Sample");
+        telemetry.update();
+
     }
+
+
 
     @Override
     public void stop() {
