@@ -101,20 +101,6 @@ public class IntoTheDeepSTATES extends OpMode {
             backLift.slidesBase();
         }
 
-        // Transfer specimen from front to back extension
-        if (gamepad1.a) {
-
-
-            runtime.reset();
-            while (runtime.seconds() <= 0.75) {
-                frontExtension.frontPivotTransfer();
-                frontExtension.backPivotTransfer();
-                frontExtension.wristInit();
-                frontExtension.transferFullIn();
-            }
-
-        }
-
         // Lower to grab position
         if (gamepad1.right_bumper) {
             wristPosition= 0;
@@ -123,15 +109,25 @@ public class IntoTheDeepSTATES extends OpMode {
             frontExtension.backPivotBase();
         }
 
+
         // Grab specimen
         if (gamepad1.b) {
-            runtime.reset();
-            while (runtime.seconds() <= 0.25) {
-                frontExtension.frontClawGrab();
-                backLift.slideClawOpen();
+            runtime.reset(); // Reset the timer
+            while (runtime.seconds() <= .25) { frontExtension.frontClawGrab(); // Grab the sample
             }
-            frontExtension.frontPivotBase();
-            frontExtension.backPivotBase();
+
+            frontExtension.frontPivotGrab();
+            frontExtension.backPivotTransfer();
+            if (sampleDetected) {
+                // If a sample was detected, transfer it
+                frontExtension.frontPivotTransfer();
+                frontExtension.transferFullIn();
+                frontExtension.wristInit();
+            } else {
+                // If no sample detected, reset and open the claw
+                frontExtension.backPivotBase();
+                frontExtension.frontClawOpen();
+            }
         }
 
 // Cycle wrist positions with right stick press
@@ -186,18 +182,21 @@ public class IntoTheDeepSTATES extends OpMode {
         if (gamepad1.dpad_up) {
             frontExtension.transferExtend();
             frontExtension.frontPivotGrab();
-            frontExtension.backPivotBase();
+            frontExtension.backPivotPreGrab();
             frontExtension.wristInit();
+            wristPosition= 0;
         } else if (gamepad1.dpad_right) {
             frontExtension.transferMiddle();
             frontExtension.frontPivotGrab();
-            frontExtension.backPivotBase();
+            frontExtension.backPivotPreGrab();
             frontExtension.wristInit();
+            wristPosition= 0;
         } else if (gamepad1.dpad_down) {
             frontExtension.transferFullIn();
             frontExtension.frontPivotGrab();
-            frontExtension.backPivotBase();
+            frontExtension.backPivotPreGrab();
             frontExtension.wristInit();
+            wristPosition= 0;
         }
 
 

@@ -25,7 +25,7 @@ public class FrontExt {
         frontClaw.setDirection(Servo.Direction.REVERSE);
         rightTransfer.setDirection(Servo.Direction.REVERSE);
 
-        backPivotBase();
+        backpivotinit();
         frontPivotTransfer();
         wristInit();
         frontClawOpen();
@@ -92,6 +92,8 @@ public class FrontExt {
         setWristClaw(0.8);
     }
 
+    public void wristspec(){setWristClaw(1);}
+
     /**
      * The following 3 (+1) positions are for the front pivot servo.
      *
@@ -124,9 +126,13 @@ public class FrontExt {
         setBackPivot(0.32);
     }
 
+    public void backPivotPreGrab(){setBackPivot(0.2);}
+
     public void backPivotTransfer() {
         setBackPivot(0.05);
     }
+
+    public void backpivotinit(){setBackPivot(0);}
 
 public void backPivotcimb() {setBackPivot(.5);}
 
