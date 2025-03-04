@@ -10,7 +10,6 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -21,8 +20,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
-@Disabled
-public class ONEPLUSTHREELEFTQT extends LinearOpMode {
+@Autonomous(name = "0+4 LEFTSTATES", group = "Autonomous")
+public class ZEROPLUSFOURLEFTSTATES extends LinearOpMode {
 
     public static class Slides {
         private final DcMotorEx slidesL;
@@ -37,35 +36,6 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
             slidesR.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
-        public class spectop implements Action {
-            private boolean slidesInit = false;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                if (!slidesInit) {
-                    slidesL.setPower(1);
-                    slidesR.setPower(1);
-                    slidesInit = true;
-                }
-
-                double posL = slidesL.getCurrentPosition();
-                packet.put("slideLPos", posL);
-
-                double posR = slidesR.getCurrentPosition();
-                packet.put("slideRPos", posR);
-
-                if (posL < 1350 & posR < 1350) {
-                    return true;
-                } else {
-                    slidesL.setPower(0.05);
-                    slidesR.setPower(0.05);
-                    return false;
-                }
-            }
-        }
-        public Action spectop() {
-            return new spectop();
-        }
 
         public class SlidesUp implements Action {
             private boolean slidesInit = false;
@@ -98,8 +68,6 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
             return new SlidesUp();
         }
 
-
-
         public class SlidesDown implements Action {
             private boolean init = false;
 
@@ -130,40 +98,7 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
         public Action slidesDown() {
             return new SlidesDown();
         }
-
-        public class speclow implements Action {
-            private boolean init = false;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                if (!init) {
-                    slidesL.setPower(-1);
-                    slidesR.setPower(-1);
-                    init = true;
-                }
-
-                double posL = slidesL.getCurrentPosition();
-                packet.put("slideLPos", posL);
-
-                double posR = slidesR.getCurrentPosition();
-                packet.put("slideRPos", posR);
-
-                if (posL > 800 & posR > 800) {
-                    return true;
-                } else {
-                    slidesL.setPower(-0);
-                    slidesR.setPower(-0);
-                    return false;
-                }
-            }
-        }
-
-        public Action speclow() {
-            return new speclow();
-        }
-
     }
-
 
     public static class ExtFront {
         private final Servo backPivot;
@@ -230,7 +165,7 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
         public class ClawClose implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                frontClaw.setPosition(0.26);
+                frontClaw.setPosition(.26);
                 return false;
             }
         }
@@ -317,23 +252,23 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
 
     public static class ExtBack {
 
-        private final Servo slidePivot;
+        private final Servo leftBackTransfer;
+        private final Servo rightBackTransfer;
         private final Servo slideClaw;
 
-        private final Servo specimenClaw;
-
         public ExtBack(HardwareMap hwMap) {
-            slidePivot = hwMap.get(Servo.class, "slide pivot");
+            leftBackTransfer = hwMap.get(Servo.class, "BTleft");
+            rightBackTransfer = hwMap.get(Servo.class, "BTright");
             slideClaw = hwMap.get(Servo.class, "slide claw");
-            specimenClaw = hwMap.get(Servo.class, "specimen claw");
 
-            slidePivot.setDirection(Servo.Direction.REVERSE);
+            rightBackTransfer.setDirection(Servo.Direction.REVERSE);
         }
 
         public class SlidePivotBase implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                slidePivot.setPosition(0.0);
+                leftBackTransfer.setPosition(1);
+                rightBackTransfer.setPosition(1);
                 return false;
             }
         }
@@ -345,7 +280,8 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
         public class SlidePivotDrop implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                slidePivot.setPosition(0.8);
+                leftBackTransfer.setPosition(.35);
+                rightBackTransfer.setPosition(.35);
                 return false;
             }
         }
@@ -370,30 +306,6 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 slideClaw.setPosition(0.41);
-                return false;
-            }
-        }
-
-        public Action specopen() {
-            return new SpecOpen();
-        }
-
-        public class SpecOpen implements Action {
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                specimenClaw.setPosition(0.3);
-                return false;
-            }
-        }
-
-        public Action specclose() {
-            return new SpecClose();
-        }
-
-        public class SpecClose implements Action {
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                specimenClaw.setPosition(0);
                 return false;
             }
         }
@@ -424,8 +336,7 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
                         extFront.wristInit(),
                         extBack.slidePivotBase(),
                         extBack.slideClawClose(),
-                        slides.slidesDown(),
-                        extBack.specclose()
+                        slides.slidesDown()
                 )
         );
 
@@ -434,19 +345,19 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
 
 
         Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(10,0,0))
-                        .stopAndAdd(slides.spectop())
-                        //fill in with new start position
-                        .strafeToLinearHeading(new Vector2d(30 ,32), Math.toRadians(270))
-                        //first cycle
-                        .stopAndAdd(slides.speclow())
-                        .waitSeconds(.5)
-                        .stopAndAdd(extBack.specopen())
-                        .stopAndAdd(extFront.backPivotBase())
-                        .strafeToLinearHeading(new Vector2d(-16,15), Math.toRadians(90))
-                        .stopAndAdd(slides.slidesDown())
+                drive.actionBuilder(new Pose2d(0,0,0))
+                        .stopAndAdd(slides.slidesUp())
+                        .stopAndAdd(extBack.slidePivotDrop())
                         .stopAndAdd(extFront.transferExtend())
-                        .waitSeconds(1)//fill in blank
+                        .stopAndAdd(extFront.backPivotBase())
+                        .strafeToLinearHeading(new Vector2d(-23,9), Math.toRadians(45))
+                        .stopAndAdd(extBack.slideClawOpen())
+                        .waitSeconds(.125)
+                        .stopAndAdd(extBack.slidePivotBase())
+                        .waitSeconds(.125)
+                        //first cycle
+                        .stopAndAdd(slides.slidesDown())
+                        .strafeToLinearHeading(new Vector2d(-17,15), Math.toRadians(90))
                         .stopAndAdd(extFront.clawClose())
                         .waitSeconds(.25)
                         .stopAndAdd(extFront.backPivotTransfer())
@@ -470,7 +381,7 @@ public class ONEPLUSTHREELEFTQT extends LinearOpMode {
                         .stopAndAdd(extBack.slidePivotBase())
                         .waitSeconds(.125)
                         .stopAndAdd(slides.slidesDown())
-                        .strafeToLinearHeading(new Vector2d(-29,15), Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(-28,14), Math.toRadians(90))
                         .stopAndAdd(extFront.clawClose())
                         .waitSeconds(.25)
                         .stopAndAdd(extFront.backPivotTransfer())
