@@ -20,8 +20,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
-@Autonomous(name = "0+4 LEFTSTATES", group = "Autonomous")
-public class ZEROPLUSFOURLEFTSTATES extends LinearOpMode {
+@Autonomous(name = "0+5 LEFTSTATES", group = "Autonomous")
+public class ZEROPLUSFIVELEFTSTATES extends LinearOpMode {
 
     public static class Slides {
         private final DcMotorEx slidesL;
@@ -372,7 +372,29 @@ public class ZEROPLUSFOURLEFTSTATES extends LinearOpMode {
                         .waitSeconds(.125)
                         //first cycle
                         .stopAndAdd(slides.slidesDown())
-                        .strafeToLinearHeading(new Vector2d(-17,11), Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(2,3.5), Math.toRadians(0))
+                        .stopAndAdd(extFront.clawClose())
+                        .waitSeconds(.25)
+                        .stopAndAdd(extFront.backPivotTransfer())
+                        .stopAndAdd(extFront.frontPivotTransfer())
+                        .stopAndAdd(extFront.transferIn())
+                        .waitSeconds(.5)
+                        .strafeToLinearHeading(new Vector2d(-23,9), Math.toRadians(45))
+                        .stopAndAdd(extBack.slideClawClose())
+                        .stopAndAdd(extFront.clawOpen())
+                        .stopAndAdd(extFront.frontPivotGrab())
+                        .stopAndAdd(extFront.backPivotBase())
+                        .waitSeconds(.2)
+                        .stopAndAdd(slides.slidesUp())
+                        .stopAndAdd(extBack.slidePivotDrop())
+                        .waitSeconds(.68)
+                        .stopAndAdd(extBack.slideClawOpen())
+                        .waitSeconds(.5)
+                        .stopAndAdd(extFront.transferExtend())
+                        .stopAndAdd(extBack.slidePivotBase())
+                        //second cycle
+                        .stopAndAdd(slides.slidesDown())
+                        .strafeToLinearHeading(new Vector2d(-16.5,11), Math.toRadians(90))
                         .stopAndAdd(extFront.clawClose())
                         .waitSeconds(.25)
                         .stopAndAdd(extFront.backPivotTransfer())
@@ -393,6 +415,7 @@ public class ZEROPLUSFOURLEFTSTATES extends LinearOpMode {
                         .stopAndAdd(extFront.transferExtend())
                         .stopAndAdd(extBack.slidePivotBase())
                         .stopAndAdd(slides.slidesDown())
+                        //third cycle
                         .strafeToLinearHeading(new Vector2d(-27.5,10), Math.toRadians(90))
                         .stopAndAdd(extFront.clawClose())
                         .waitSeconds(.25)
@@ -401,7 +424,6 @@ public class ZEROPLUSFOURLEFTSTATES extends LinearOpMode {
                         .stopAndAdd(extFront.transferIn())
                         .waitSeconds(.5)
                         .strafeToLinearHeading(new Vector2d(-23,9), Math.toRadians(45))
-                        //third cycle
                         .stopAndAdd(extBack.slideClawClose())
                         .stopAndAdd(extFront.clawOpen())
                         .stopAndAdd(extFront.frontPivotGrab())
@@ -416,6 +438,7 @@ public class ZEROPLUSFOURLEFTSTATES extends LinearOpMode {
                         .stopAndAdd(extBack.slidePivotBase())
                         .stopAndAdd(extFront.wristRotate())
                         .stopAndAdd(slides.slidesDown())
+                        //fourth cycle
                         .strafeToLinearHeading(new Vector2d(-18  ,18), Math.toRadians(135))
                         .stopAndAdd(extFront.clawClose())
                         .waitSeconds(.25)

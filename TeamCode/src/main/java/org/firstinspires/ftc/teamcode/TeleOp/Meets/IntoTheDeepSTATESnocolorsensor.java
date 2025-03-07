@@ -2,19 +2,19 @@ package org.firstinspires.ftc.teamcode.TeleOp.Meets;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.mechanisms.BackLift;
 import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.mechanisms.FrontExt;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 
 @TeleOp
-public class IntoTheDeepSTATES extends OpMode {
+public class IntoTheDeepSTATESnocolorsensor extends OpMode {
     Drivetrain drivetrain = new Drivetrain();
     FrontExt frontExtension = new FrontExt();
     BackLift backLift = new BackLift();
-    ColorSensor colorSensor;
+
     ElapsedTime runtime = new ElapsedTime();
 
     // State variable for cycling wrist positions
@@ -26,7 +26,7 @@ public class IntoTheDeepSTATES extends OpMode {
         drivetrain.init(hardwareMap);
         frontExtension.init(hardwareMap);
         backLift.init(hardwareMap);
-        colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+
         telemetry.addData("Status", "Initialized");
         runtime.reset();
     }
@@ -34,14 +34,6 @@ public class IntoTheDeepSTATES extends OpMode {
     @Override
     public void loop() {
 
-        int red = colorSensor.red();
-        int green = colorSensor.green();
-        int blue = colorSensor.blue();
-
-        boolean isYellow = (red > 1000 && green > 1000 && blue < 2000);
-        boolean isBlue = (blue > red * 1.3 && blue > green * 1.3);
-        boolean isRed = (red > blue * 1.3 && red > green * 1.1);
-        boolean sampleDetected = isYellow || isBlue || isRed;
 
         // P1 drive code, field centric (up is always up)
         float forward = -gamepad1.left_stick_y;
@@ -118,16 +110,11 @@ public class IntoTheDeepSTATES extends OpMode {
 
             frontExtension.frontPivotGrab();
             frontExtension.backPivotTransfer();
-            if (sampleDetected) {
-                // If a sample was detected, transfer it
                 frontExtension.frontPivotTransfer();
                 frontExtension.transferFullIn();
                 frontExtension.wristInit();
-            } else {
-                // If no sample detected, reset and open the claw
-                frontExtension.backPivotBase();
-                frontExtension.frontClawOpen();
-            }
+
+
         }
 
 // Cycle wrist positions with right stick press
@@ -209,7 +196,7 @@ public class IntoTheDeepSTATES extends OpMode {
         // Basket pivots and specimen handling
         if (gamepad2.dpad_up) {
             runtime.reset();
-            while (runtime.seconds() <= 0.125) {
+            while (runtime.seconds() <= 0.2) {
                 backLift.slideClawClose();
                 frontExtension.frontClawOpen();
                 frontExtension.frontPivotBase();
@@ -221,7 +208,7 @@ public class IntoTheDeepSTATES extends OpMode {
 
         } else if (gamepad2.dpad_right) {
             runtime.reset();
-            while (runtime.seconds() <= 0.125) {
+            while (runtime.seconds() <= .2) {
                 backLift.slideClawClose();
                 frontExtension.frontClawOpen();
                 frontExtension.frontPivotBase();
@@ -256,14 +243,7 @@ public class IntoTheDeepSTATES extends OpMode {
 
         }
 
-        telemetry.addData("Red", red);
-        telemetry.addData("Green", green);
-        telemetry.addData("Blue", blue);
-        telemetry.addData("Detected Color", isYellow ? "Yellow" : isBlue ? "Blue" : isRed ? "Red" : "None");
-        telemetry.addData("Sample Status", sampleDetected ? "Sample Detected" : "No Sample");
-        telemetry.update();
-
-
+        
 
     }
 

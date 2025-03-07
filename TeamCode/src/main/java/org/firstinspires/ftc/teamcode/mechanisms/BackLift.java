@@ -47,7 +47,7 @@ public class BackLift {
     }
 
     public void slidesTop() {
-        setSlides(2250);
+        setSlides(2700);
     }
 
     public void slidesMiddle() {
@@ -63,7 +63,7 @@ public class BackLift {
         setSlides(1350);
     }
 
-    public void slidesSpec(){setSlides(500);}
+    public void slidesSpec(){setSlides(700);}
 
     /**
      * The following 2 (+1) loops all have to do with SlidePivot positions.
