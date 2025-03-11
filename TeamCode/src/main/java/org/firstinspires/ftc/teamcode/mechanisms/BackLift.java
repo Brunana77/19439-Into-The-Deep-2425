@@ -10,6 +10,7 @@ public class BackLift {
     private Servo slideClaw;
     private Servo leftBackTransfer;
     private Servo rightBackTransfer;
+    private Servo specimenClaw;
 
 
     public void init(HardwareMap hwMap) {
@@ -18,6 +19,7 @@ public class BackLift {
         slideClaw = hwMap.get(Servo.class, "slide claw");
         leftBackTransfer = hwMap.get(Servo.class, "BTleft");
         rightBackTransfer = hwMap.get(Servo.class, "BTright");
+        specimenClaw = hwMap.get(Servo.class, "specimen claw");
 
         //Slides
         slidesR.setDirection(DcMotor.Direction.REVERSE);
@@ -27,6 +29,7 @@ public class BackLift {
 
         slideClawOpen();
         transfergrab();
+        specimenClose();
     }
 
     /**
@@ -56,14 +59,17 @@ public class BackLift {
 
 
     public void slidesSpecimenHang() {
-        setSlides(950);
+        setSlides(1250);
     }
 
     public void slidesSpecimenPreHang() {
-        setSlides(1350);
+        setSlides(1850);
     }
 
-    public void slidesSpec(){setSlides(700);}
+    public void specslides(){
+        setSlides(300);
+    }
+
 
     /**
      * The following 2 (+1) loops all have to do with SlidePivot positions.
@@ -103,7 +109,26 @@ public  void transferdrop(){
      * The following 2 (+1) are specimen claw positions.
      */
 
-    public void climbTop(){setSlides(1800);}
+    public void climbTop(){setSlides(2500);}
 
-    public void climbBottom(){setSlides(1200);}
+    public void climbBottom(){setSlides(1500);}
+
+    public void setSpecimenClaw(double pos) {
+        specimenClaw.setPosition(pos);
+    }
+
+    public void specimenOpen() {
+        setSpecimenClaw(.5 );
+    }
+
+    public void specimenClose() {
+        setSpecimenClaw(0);
+    }
+
+    public void resetSlidesEncoders() {
+        slidesL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slidesR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slidesL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slidesR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
 }

@@ -21,7 +21,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
-@Autonomous(name = "0+4 LEFTQT", group = "Autonomous")
+@Disabled
 public class ZEROPLUSFOURLEFTQT extends LinearOpMode {
 
     public static class Slides {

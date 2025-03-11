@@ -134,6 +134,5 @@ public class FrontExt {
 
     public void backpivotinit(){setBackPivot(0);}
 
-public void backPivotcimb() {setBackPivot(.5);}
 
 }

@@ -127,8 +127,8 @@ public class ZEROPLUSFIVELEFTSTATES extends LinearOpMode {
         public class TransferIn implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                leftTransfer.setPosition(.69);
-                rightTransfer.setPosition(.69);
+                leftTransfer.setPosition(.65);
+                rightTransfer.setPosition(.65);
                 return false;
             }
         }
@@ -226,7 +226,7 @@ public class ZEROPLUSFIVELEFTSTATES extends LinearOpMode {
         public class BackPivotBase implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                backPivot.setPosition(0.31);
+                backPivot.setPosition(0.30);
                 return false;
             }
         }
