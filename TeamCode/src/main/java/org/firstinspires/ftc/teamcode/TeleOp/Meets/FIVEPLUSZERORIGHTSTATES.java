@@ -54,7 +54,7 @@ public class FIVEPLUSZERORIGHTSTATES extends LinearOpMode {
                 double posR = slidesR.getCurrentPosition();
                 packet.put("slideRPos", posR);
 
-                if (posL < 2700 & posR < 2700) {
+                if (posL < 1850 & posR < 1850) {
                     return true;
                 } else {
                     slidesL.setPower(0.05);
@@ -98,7 +98,41 @@ public class FIVEPLUSZERORIGHTSTATES extends LinearOpMode {
         public Action slidesDown() {
             return new SlidesDown();
         }
+
+
+        public class SlidesSpec implements Action {
+            private boolean init = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!init) {
+                    slidesL.setPower(-1);
+                    slidesR.setPower(-1);
+                    init = true;
+                }
+
+                double posL = slidesL.getCurrentPosition();
+                packet.put("slideLPos", posL);
+
+                double posR = slidesR.getCurrentPosition();
+                packet.put("slideRPos", posR);
+
+                if (posL > 1600 & posR > 1600) {
+                    return true;
+                } else {
+                    slidesL.setPower(-.3);
+                    slidesR.setPower(-.3);
+                    return false;
+                }
+            }
+        }
+
+        public Action slidesSpec() {
+            return new SlidesSpec();
+        }
+
     }
+
 
     public static class ExtFront {
         private final Servo backPivot;
@@ -268,14 +302,46 @@ public class FIVEPLUSZERORIGHTSTATES extends LinearOpMode {
         private final Servo leftBackTransfer;
         private final Servo rightBackTransfer;
         private final Servo slideClaw;
+        private final Servo SpecClaw;
+
 
         public ExtBack(HardwareMap hwMap) {
             leftBackTransfer = hwMap.get(Servo.class, "BTleft");
             rightBackTransfer = hwMap.get(Servo.class, "BTright");
             slideClaw = hwMap.get(Servo.class, "slide claw");
+            SpecClaw = hwMap.get(Servo.class, "specimen claw");
+
 
             rightBackTransfer.setDirection(Servo.Direction.REVERSE);
         }
+
+        public class specClawRel implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                SpecClaw.setPosition(.5);
+                return false;
+            }
+        }
+
+        public Action specClawRel() {
+            return new specClawRel();
+        }
+
+        public class specClawGo implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                SpecClaw.setPosition(0);
+                return false;
+            }
+        }
+
+        public Action specClawGo() {
+            return new specClawGo();
+        }
+
+
+
+
 
         public class SlidePivotBase implements Action {
             @Override
@@ -298,7 +364,6 @@ public class FIVEPLUSZERORIGHTSTATES extends LinearOpMode {
                 return false;
             }
         }
-
         public Action slidePivotDrop() {
             return new SlidePivotDrop();
         }
@@ -359,12 +424,19 @@ public class FIVEPLUSZERORIGHTSTATES extends LinearOpMode {
 
         Actions.runBlocking(
                 drive.actionBuilder(new Pose2d(0,0,0))
+                        .stopAndAdd(slides.slidesUp())
+                        .strafeToLinearHeading(new Vector2d(-15,41), Math.toRadians(270))
+                        .stopAndAdd(slides.slidesSpec())
+                        .stopAndAdd(extBack.specClawRel())
+                        .waitSeconds(.1)
+                        .strafeToLinearHeading(new Vector2d(20,15), Math.toRadians(270))
+                        .stopAndAdd(slides.slidesDown())
                         .strafeToLinearHeading(new Vector2d(20,50), Math.toRadians(270))
                         .strafeToLinearHeading(new Vector2d(32,50), Math.toRadians(270))
                         .strafeToLinearHeading(new Vector2d(32,0), Math.toRadians(270))
-                        .strafeToLinearHeading(new Vector2d(42,50), Math.toRadians(270))
-                        .strafeToLinearHeading(new Vector2d(42,0), Math.toRadians(270))
-                        .strafeToLinearHeading(new Vector2d(42,50), Math.toRadians(270))
+                        .strafeToLinearHeading(new Vector2d(32,50), Math.toRadians(270))
+                        .strafeToLinearHeading(new Vector2d(45,50), Math.toRadians(270))
+                        .strafeToLinearHeading(new Vector2d(45,0), Math.toRadians(270))
 
                         .build()
         );

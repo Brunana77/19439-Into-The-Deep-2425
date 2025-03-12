@@ -101,7 +101,7 @@ public class IntoTheDeepSTATES extends OpMode {
         }
 
         if(gamepad1.y){
-            backLift.specslides();
+            backLift.slidesBase();
             backLift.specimenOpen();
         }
 

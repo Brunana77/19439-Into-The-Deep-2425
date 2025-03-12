@@ -30,6 +30,7 @@ public class BackLift {
         slideClawOpen();
         transfergrab();
         specimenClose();
+        initslides();
     }
 
     /**
@@ -46,7 +47,7 @@ public class BackLift {
     }
 
     public void slidesBase() {
-        setSlides(0);
+        setSlides(20);
     }
 
     public void slidesTop() {
@@ -59,7 +60,7 @@ public class BackLift {
 
 
     public void slidesSpecimenHang() {
-        setSlides(1250);
+        setSlides(1400);
     }
 
     public void slidesSpecimenPreHang() {
@@ -70,6 +71,9 @@ public class BackLift {
         setSlides(300);
     }
 
+    public void initslides(){
+        setSlides(0);
+    }
 
     /**
      * The following 2 (+1) loops all have to do with SlidePivot positions.
