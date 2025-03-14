@@ -100,6 +100,7 @@ public class FIVEPLUSZERORIGHTSTATES extends LinearOpMode {
         }
 
 
+
         public class SlidesSpec implements Action {
             private boolean init = false;
 
@@ -117,15 +118,16 @@ public class FIVEPLUSZERORIGHTSTATES extends LinearOpMode {
                 double posR = slidesR.getCurrentPosition();
                 packet.put("slideRPos", posR);
 
-                if (posL > 1600 & posR > 1600) {
+                if (posL > 1400 & posR > 1400) {
                     return true;
                 } else {
-                    slidesL.setPower(-.3);
-                    slidesR.setPower(-.3);
+                    slidesL.setPower(-0);
+                    slidesR.setPower(-0);
                     return false;
                 }
             }
         }
+
 
         public Action slidesSpec() {
             return new SlidesSpec();
@@ -425,18 +427,51 @@ public class FIVEPLUSZERORIGHTSTATES extends LinearOpMode {
         Actions.runBlocking(
                 drive.actionBuilder(new Pose2d(0,0,0))
                         .stopAndAdd(slides.slidesUp())
-                        .strafeToLinearHeading(new Vector2d(-15,41), Math.toRadians(270))
+                        .strafeToLinearHeading(new Vector2d(-15,33), Math.toRadians(270))
+                        .stopAndAdd(slides.slidesSpec())
+                        .stopAndAdd(extBack.specClawRel())
+                        .waitSeconds(.2)
+                        .splineTo(new Vector2d(20,22), Math.toRadians(0))
+                        .stopAndAdd(slides.slidesDown())
+                        .strafeToLinearHeading(new Vector2d(20,54), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(32,54), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(32,7), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(32,5), Math.toRadians(90))
+                        .waitSeconds(.4)
+                        .strafeToLinearHeading(new Vector2d(32,0), Math.toRadians(90))
+                        .stopAndAdd(extBack.specClawGo())
+                        .waitSeconds(.1)
+                        .stopAndAdd(slides.slidesUp())
+                        .strafeToLinearHeading(new Vector2d(-15,33), Math.toRadians(270))
                         .stopAndAdd(slides.slidesSpec())
                         .stopAndAdd(extBack.specClawRel())
                         .waitSeconds(.1)
-                        .strafeToLinearHeading(new Vector2d(20,15), Math.toRadians(270))
+                        .strafeToLinearHeading(new Vector2d(32,3), Math.toRadians(90))
+                        .waitSeconds(.2)
                         .stopAndAdd(slides.slidesDown())
-                        .strafeToLinearHeading(new Vector2d(20,50), Math.toRadians(270))
-                        .strafeToLinearHeading(new Vector2d(32,50), Math.toRadians(270))
-                        .strafeToLinearHeading(new Vector2d(32,0), Math.toRadians(270))
-                        .strafeToLinearHeading(new Vector2d(32,50), Math.toRadians(270))
-                        .strafeToLinearHeading(new Vector2d(45,50), Math.toRadians(270))
-                        .strafeToLinearHeading(new Vector2d(45,0), Math.toRadians(270))
+                        .strafeToLinearHeading(new Vector2d(32,0), Math.toRadians(90))
+                        .stopAndAdd(extBack.specClawGo())
+                        .waitSeconds(.1)
+                        .stopAndAdd(slides.slidesUp())
+                        .strafeToLinearHeading(new Vector2d(-13,33), Math.toRadians(270))
+                        .stopAndAdd(slides.slidesSpec())
+                        .stopAndAdd(extBack.specClawRel())
+                        .waitSeconds(.1)
+                        .strafeToLinearHeading(new Vector2d(35,5), Math.toRadians(180))
+                        .stopAndAdd(slides.slidesDown())
+
+
+
+                       /* .strafeToLinearHeading(new Vector2d(32,54), Math.toRadians(270))
+                        .strafeToLinearHeading(new Vector2d(45,54), Math.toRadians(270))
+                        .strafeToLinearHeading(new Vector2d(45,5), Math.toRadians(270))
+
+                        */
+
+
+
+                        .waitSeconds(60)
+                        .strafeToLinearHeading(new Vector2d(100,100), Math.toRadians(45))
 
                         .build()
         );
@@ -447,3 +482,5 @@ public class FIVEPLUSZERORIGHTSTATES extends LinearOpMode {
 
     }
 }
+
+//35 to the right (not a strafe tho) 12 to the left 20,22

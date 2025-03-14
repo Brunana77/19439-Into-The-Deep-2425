@@ -226,7 +226,7 @@ public class ZEROPLUSFOURLEFTSTATES extends LinearOpMode {
         public class BackPivotBase implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                backPivot.setPosition(0.30);
+                backPivot.setPosition(0.31);
                 return false;
             }
         }
@@ -372,8 +372,8 @@ public class ZEROPLUSFOURLEFTSTATES extends LinearOpMode {
                         .waitSeconds(.125)
                         //first cycle
                         .stopAndAdd(slides.slidesDown())
-                        .strafeToLinearHeading(new Vector2d(-17,11), Math.toRadians(90))
-                        .waitSeconds(.1)
+                        .strafeToLinearHeading(new Vector2d(-16.5,11), Math.toRadians(90))
+                        .waitSeconds(.25)
                         .stopAndAdd(extFront.clawClose())
                         .waitSeconds(.25)
                         .stopAndAdd(extFront.backPivotTransfer())
@@ -394,8 +394,8 @@ public class ZEROPLUSFOURLEFTSTATES extends LinearOpMode {
                         .stopAndAdd(extFront.transferExtend())
                         .stopAndAdd(extBack.slidePivotBase())
                         .stopAndAdd(slides.slidesDown())
-                        .strafeToLinearHeading(new Vector2d(-27.5,10), Math.toRadians(90))
-                        .waitSeconds(.1)
+                        .strafeToLinearHeading(new Vector2d(-27,10.25), Math.toRadians(90))
+                        .waitSeconds(.25)
                         .stopAndAdd(extFront.clawClose())
                         .waitSeconds(.25)
                         .stopAndAdd(extFront.backPivotTransfer())
@@ -418,8 +418,8 @@ public class ZEROPLUSFOURLEFTSTATES extends LinearOpMode {
                         .stopAndAdd(extBack.slidePivotBase())
                         .stopAndAdd(extFront.wristRotate())
                         .stopAndAdd(slides.slidesDown())
-                        .strafeToLinearHeading(new Vector2d(-18  ,18), Math.toRadians(135))
-                        .waitSeconds(.1)
+                        .strafeToLinearHeading(new Vector2d(-17.5  ,18), Math.toRadians(135))
+                        .waitSeconds(.25)
                         .stopAndAdd(extFront.clawClose())
                         .waitSeconds(.25)
                         .stopAndAdd(extFront.backPivotTransfer())

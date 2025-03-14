@@ -47,7 +47,7 @@ public class BackLift {
     }
 
     public void slidesBase() {
-        setSlides(20);
+        setSlides(25);
     }
 
     public void slidesTop() {
